@@ -3,6 +3,7 @@ import { Button } from '../../components/Button/Button';
 import { useFetch } from '../../Hooks/useFetch';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
 
 export const ProductosCreate = () => {
 	const navigate = useNavigate();
@@ -47,22 +48,30 @@ export const ProductosCreate = () => {
 			return;
 		}
 
-        const product = {
-            name,
-            valorU,
-            insumo,
-            stockMin,
-            stockMax,
-            descripcion
-        }
-
-        setBodyRequest(product);
-
-		if(!error) {
-			navigate('/admin/productos')
-		}
-
-		console.log(error)
+        Swal.fire({
+			title: 'Confirmar',
+			text: '¿Deseas crear el producto?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonText: 'Sí',
+			cancelButtonText: 'No',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const product = {
+					name,	
+					valorU,
+					insumo,
+					stockMin,
+					stockMax,
+					descripcion
+				}
+				Swal.fire("Producto creado con éxito!", "", "success");
+				setBodyRequest(product); 
+				if (!error) {
+					navigate('/admin/productos');
+				}
+			}
+		});
 
         // console.log(error);
 

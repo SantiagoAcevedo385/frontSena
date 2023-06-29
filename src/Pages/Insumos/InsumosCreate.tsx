@@ -3,6 +3,7 @@ import { Button } from '../../components/Button/Button';
 import { useFetch } from '../../Hooks/useFetch';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export const InsumosCreate = () => {
 	const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const InsumosCreate = () => {
 		const cantidad = e.target.cantidad.value;
 		const categoria = e.target.categoria.value;
 		const descripcion = e.target.descripcion.value;
-
+	
 		if (nombre === '') {
 			setControlErrors({ ...controlErrors, nombre: 'El nombre es requerido' });
 			return;
@@ -39,28 +40,30 @@ export const InsumosCreate = () => {
 			setControlErrors({ ...controlErrors, descripcion: 'La decripción es requerida' });
 			return;
 		}
-
-        const insumo = {
-            nombre,
-            costoSaco,
-            cantidad,
-            categoria,
-            descripcion
-        }
-
-        setBodyRequest(insumo);
-
-		if(!error) {
-			navigate('/admin/insumo')
-		}
-
-		console.log(error)
-
-        // console.log(error);
-
-        // console.log(user);
-        // console.log(data);
-
+	
+		Swal.fire({
+			title: 'Confirmar',
+			text: '¿Deseas crear el insumo?',
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonText: 'Sí',
+			cancelButtonText: 'No',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const insumo = {
+					nombre,
+					costoSaco,
+					cantidad,
+					categoria,
+					descripcion,
+				};
+				Swal.fire("Insumo creado con éxito!", "", "success");
+				setBodyRequest(insumo); 
+				if (!error) {
+					navigate('/admin/insumos');
+				}
+			}
+		});
 	}
 
 	const insumosFields: FormField[] = [
